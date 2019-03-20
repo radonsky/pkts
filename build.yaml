@@ -1,0 +1,3 @@
+type: maven_library
+
+pr_validation: true
