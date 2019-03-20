@@ -4,16 +4,22 @@
 package io.pkts.frame;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+
+import java.util.List;
+
 import io.pkts.PktsTestBase;
 import io.pkts.buffer.Buffers;
 import io.pkts.framer.SIPFramer;
 import io.pkts.packet.IPPacket;
+import io.pkts.packet.IPv4Packet;
 import io.pkts.packet.TransportPacket;
 import io.pkts.packet.sip.SipPacket;
 import io.pkts.packet.sip.SipRequestPacket;
+import io.pkts.protocol.Protocol;
 
 import org.junit.After;
 import org.junit.Before;
@@ -79,6 +85,23 @@ public class SipFrameTest extends PktsTestBase {
         assertThat(sip.getMethod().toString(), is("INVITE"));
         assertThat(sip.getHeader(Buffers.wrap("Call-ID")).get().getValue().toString(), is("1-16732@127.0.1.1"));
         assertThat(sip.getHeader(Buffers.wrap("Content-Length")).get().getValue().toString(), is("0"));
+    }
+    
+    @Test
+    public void testParseSipPacketHeaderSeparatedByLF() throws Exception {
+        final List<IPv4Packet> packets = loadIPPackets("174439c809dc2f69de3719cde9807bfb.pcap");
+        for (IPv4Packet packet : packets) {
+            if (packet.hasProtocol(Protocol.SIP)) {
+                SipPacket sipPacket = (SipPacket) packet.getPacket(Protocol.SIP);
+                if (sipPacket.isInvite()) {
+                    // the To: header in this packet is terminated by LF only (instead of CRLF), so assert that it is parsed correctly
+                    assertEquals("sip:+27721835998@zailab-production-international.pstn.us2-ix.twilio.com",
+                            sipPacket.getToHeader().getAddress().toString());
+                    break;
+                }
+            }
+        }
+ 
     }
 
 }
