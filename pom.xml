@@ -34,6 +34,36 @@
       </developer>
    </developers>
 
+  <distributionManagement>
+    <repository>
+      <id>twilio.nexus.releases</id>
+      <name>twilio.internal.releases</name>
+      <url>http://nexus.corp.twilio.com/content/repositories/releases</url>
+    </repository>
+    <snapshotRepository>
+      <id>twilio.nexus.snapshots</id>
+      <name>twilio.internal.snapshots</name>
+      <url>http://nexus.corp.twilio.com/content/repositories/snapshots</url>
+    </snapshotRepository>
+    <site>
+      <id>twilio.nexus</id>
+      <url>http://nexus.corp.twilio.com</url>
+    </site>
+  </distributionManagement>
+
+  <repositories>
+    <repository>
+      <id>twilio.nexus</id>
+      <url>http://nexus.corp.twilio.com/content/groups/public</url>
+      <releases>
+        <enabled>true</enabled>
+      </releases>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+    </repository>
+  </repositories>
+
   <scm>
     <connection>scm:git:git@github.com:aboutsip/pkts.git</connection>
     <developerConnection>scm:git:git@github.com:aboutsip/pkts.git</developerConnection>
